@@ -241,3 +241,19 @@ tr.flag td { background: rgba(224, 138, 0, .08); }
 /* Narrow phones: let segmented rows shrink instead of clipping */
 .seg.wide button { min-width: 0; padding: 7px 4px; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .quick .btn { white-space: nowrap; padding: 14px 4px; font-size: 15px; }
+
+/* Home screen */
+main.no-tabs { padding-bottom: calc(24px + env(safe-area-inset-bottom)); }
+.home-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+.home-btn {
+  display: grid; grid-template-columns: 52px 1fr; grid-template-rows: auto auto; column-gap: 14px; align-items: center;
+  background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 18px 18px; color: var(--text);
+}
+.home-btn:active { background: var(--accent-soft); }
+.home-icon {
+  grid-row: 1 / span 2; width: 52px; height: 52px; border-radius: 14px; background: var(--accent); color: #fff;
+  display: flex; align-items: center; justify-content: center; font-size: 26px;
+}
+.home-label { font-size: 20px; font-weight: 700; }
+.home-sub { font-size: 14px; color: var(--muted); }
+.tabbar a { padding: 4px 4px; }

@@ -124,7 +124,6 @@ export function Today() {
       ...bowel.map((b) => ({ at: b.at, el: <BowelRow key={b.id} b={b} /> })),
     ].sort((a, b) => (a.at < b.at ? -1 : 1));
   }, [date, places]);
-  const at = isToday ? '' : `?at=${date}T12:00`;
 
   return (
     <div className="page">
@@ -144,20 +143,6 @@ export function Today() {
         <button type="button" className="ghost" aria-label="Next day" disabled={isToday} onClick={() => setDate(addDays(date, 1))}>
           ›
         </button>
-      </div>
-
-      <div className="quick">
-        <Link className="btn primary" to={`/meal/new${at}`}>
-          + Food
-        </Link>
-        <Link className="btn primary" to={`/symptom/new${at}`}>
-          + Symptoms
-        </Link>
-        {settings.trackBowel && (
-          <Link className="btn" to={`/bowel/new${at}`}>
-            + Bowel
-          </Link>
-        )}
       </div>
 
       <section>

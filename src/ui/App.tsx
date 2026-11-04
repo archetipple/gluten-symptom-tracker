@@ -1,4 +1,5 @@
 import { HashRouter, NavLink, Route, Routes, useLocation } from 'react-router-dom';
+import { Home } from './pages/Home';
 import { Today } from './pages/Today';
 import { FoodLog } from './pages/FoodLog';
 import { MealEdit } from './pages/MealEdit';
@@ -9,21 +10,25 @@ import { PatternsPage } from './pages/Patterns';
 import { PlaceEdit, PlacesPage } from './pages/Places';
 import { MedsPage } from './pages/Meds';
 import { SettingsPage } from './pages/SettingsPage';
-
-const NAV = [
-  { to: '/', label: 'Today', icon: '◉', also: ['/settings', '/meds'] },
-  { to: '/food', label: 'Food', icon: '◈', also: ['/meal', '/foods'] },
-  { to: '/symptoms', label: 'Symptoms', icon: '✚', also: ['/symptom', '/bowel'] },
-  { to: '/patterns', label: 'Patterns', icon: '▤' },
-  { to: '/places', label: 'Places', icon: '⌂' },
-];
+import { SECTIONS } from './sections';
 
 export function App() {
   return (
     <HashRouter>
-      <main>
+      <Shell />
+    </HashRouter>
+  );
+}
+
+function Shell() {
+  const { pathname } = useLocation();
+  const home = pathname === '/';
+  return (
+    <>
+      <main className={home ? 'no-tabs' : ''}>
         <Routes>
-          <Route path="/" element={<Today />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/today" element={<Today />} />
           <Route path="/food" element={<FoodLog />} />
           <Route path="/meal/:id" element={<MealEdit />} />
           <Route path="/foods" element={<MyFoods />} />
@@ -37,22 +42,21 @@ export function App() {
           <Route path="/settings" element={<SettingsPage />} />
         </Routes>
       </main>
-      <TabBar />
-    </HashRouter>
+      {/* The home screen is its own menu, so the tab bar shows everywhere else. */}
+      {!home && <TabBar pathname={pathname} />}
+    </>
   );
 }
 
-function TabBar() {
-  const { pathname } = useLocation();
+function TabBar(props: { pathname: string }) {
   return (
     <nav className="tabbar">
-      {NAV.map((n) => (
-        <NavLink
-          key={n.to}
-          to={n.to}
-          end={n.to === '/'}
-          className={({ isActive }) => (isActive || n.also?.some((p) => pathname.startsWith(p)) ? 'active' : '')}
-        >
+      <NavLink to="/" end className="home-tab" aria-label="Home">
+        <span aria-hidden="true">⌂</span>
+        Home
+      </NavLink>
+      {SECTIONS.map((n) => (
+        <NavLink key={n.to} to={n.to} className={({ isActive }) => (isActive || n.also.some((p) => props.pathname.startsWith(p)) ? 'active' : '')}>
           <span aria-hidden="true">{n.icon}</span>
           {n.label}
         </NavLink>

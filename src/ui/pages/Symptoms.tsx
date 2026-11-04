@@ -70,7 +70,7 @@ export function SymptomsPage() {
         </Link>
         {settings.trackBowel && (
           <Link className="btn" to="/bowel/new">
-            + Bowel movement
+            + Digestion
           </Link>
         )}
       </div>
