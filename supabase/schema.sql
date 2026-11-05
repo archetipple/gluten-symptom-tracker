@@ -28,6 +28,9 @@ begin
 end
 $$;
 
+-- Only the trigger runs it; nobody calls it through the API.
+revoke all on function public.records_bump_seq() from public, anon, authenticated;
+
 drop trigger if exists records_seq on public.records;
 create trigger records_seq
   before insert or update on public.records
