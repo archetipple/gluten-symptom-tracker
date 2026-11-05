@@ -1,6 +1,7 @@
 // The symptom catalog: body areas, the symptoms offered in each, where they can
 // be felt, what pain feels like and how often it happens.
 
+import { fmtDuration } from './time';
 import type { SymptomEntry, SymptomScore } from './types';
 
 export const BODY_AREAS = ['abdomen', 'head', 'skin', 'body'] as const;
@@ -138,7 +139,7 @@ export const FREQUENCY_LABELS: Record<Frequency, string> = {
 export function describe(x: SymptomScore): string {
   const parts = [...(x.locations ?? []), ...(x.qualities ?? [])].map((p) => p.toLowerCase());
   if (x.frequency) parts.push(FREQUENCY_LABELS[x.frequency].toLowerCase());
-  if (x.durationHours !== undefined) parts.push(`${x.durationHours} h`);
+  if (x.durationHours !== undefined) parts.push(fmtDuration(x.durationHours));
   return parts.join(', ');
 }
 

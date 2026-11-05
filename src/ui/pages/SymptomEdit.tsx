@@ -22,10 +22,42 @@ import {
   type BodyArea,
   type SymptomLists,
 } from '../../domain/symptoms';
-import { fmtGap, localTime, ms } from '../../domain/time';
+import { fmtGap, localTime, ms, splitHours } from '../../domain/time';
 import { WHERE_LABELS, type BowelEntry, type SymptomEntry, type SymptomScore } from '../../domain/types';
 import { Chip, Header, NumberInput, RiskTag, Scale, cap, toggle } from '../components/common';
 import { useBack, usePlaces, useSettings } from '../data';
+
+/** Hours and minutes side by side, stored as hours (1 h 30 min is 1.5). Both empty means not known. */
+function DurationInput(props: { value: number | undefined; onChange: (hours: number | undefined) => void; label: string }) {
+  const fromValue = (v: number | undefined) => {
+    if (v === undefined) return { h: undefined, m: undefined };
+    const { h, m } = splitHours(v);
+    return { h: h || m ? h || undefined : 0, m: m || undefined };
+  };
+  const [d, setD] = useState<{ h?: number; m?: number }>(() => fromValue(props.value));
+  const total = (x: { h?: number; m?: number }) => (x.h === undefined && x.m === undefined ? undefined : (x.h ?? 0) + (x.m ?? 0) / 60);
+  // Follow outside changes, but leave the fields alone while they already add up to the value.
+  useEffect(() => {
+    if (total(d) !== props.value) setD(fromValue(props.value));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.value]);
+  const put = (next: { h?: number; m?: number }) => {
+    setD(next);
+    props.onChange(total(next));
+  };
+  return (
+    <div className="duration-input" role="group" aria-label={props.label}>
+      <span className="weight-input">
+        <NumberInput value={d.h} min={0} onChange={(h) => put({ ...d, h })} label={`${props.label} hours`} />
+        <span className="unit">h</span>
+      </span>
+      <span className="weight-input">
+        <NumberInput value={d.m} min={0} max={59} onChange={(m) => put({ ...d, m })} label={`${props.label} minutes`} />
+        <span className="unit">min</span>
+      </span>
+    </div>
+  );
+}
 
 /** One symptom's rating and details. */
 function SymptomDetail(props: { x: SymptomScore; area: BodyArea; onChange: (p: Partial<SymptomScore>) => void; onRemove: () => void }) {
@@ -87,10 +119,12 @@ function SymptomDetail(props: { x: SymptomScore; area: BodyArea; onChange: (p: P
         </>
       )}
 
-      <label>
-        How long did it last? <span className="hint">(hours, optional)</span>
-        <NumberInput value={x.durationHours} min={0} onChange={(v) => onChange({ durationHours: v })} label={`${x.type} duration in hours`} />
-      </label>
+      <div className="field">
+        <span>
+          How long did it last? <span className="hint">(optional)</span>
+        </span>
+        <DurationInput value={x.durationHours} onChange={(v) => onChange({ durationHours: v })} label={`${x.type} duration`} />
+      </div>
     </div>
   );
 }
@@ -255,10 +289,10 @@ export function SymptomEdit() {
 
       <section className="card form">
         {s.durationHours !== undefined && (
-          <label>
-            How long did it all last? <span className="hint">(hours)</span>
-            <NumberInput value={s.durationHours} min={0} onChange={(v) => set({ durationHours: v })} label="Duration in hours" />
-          </label>
+          <div className="field">
+            <span>How long did it all last?</span>
+            <DurationInput value={s.durationHours} onChange={(v) => set({ durationHours: v })} label="Duration" />
+          </div>
         )}
         <label>
           Notes

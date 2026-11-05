@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { db } from '../../db/db';
 import { maxSeverity } from '../../domain/patterns';
 import { describe } from '../../domain/symptoms';
-import { addDays, dateStr, dayOf, fmtDay, fmtTime } from '../../domain/time';
+import { addDays, dateStr, dayOf, fmtDay, fmtDuration, fmtTime } from '../../domain/time';
 import type { BowelEntry, SymptomEntry } from '../../domain/types';
 import { Header, SeverityTag } from '../components/common';
 import { useSettings } from '../data';
@@ -20,7 +20,7 @@ export function SymptomRow(props: { s: SymptomEntry }) {
       <span className="time">{fmtTime(s.at)}</span>
       <span className="grow">
         <span className="title">{s.symptoms.map((x) => x.type).join(', ')}</span>
-        {s.durationHours !== undefined && <span className="sub"> · {s.durationHours} h</span>}
+        {s.durationHours !== undefined && <span className="sub"> · {fmtDuration(s.durationHours)}</span>}
         {s.symptoms.map((x) => {
           const d = describe(x);
           return (

@@ -273,3 +273,17 @@ main.no-tabs { padding-bottom: calc(24px + env(safe-area-inset-bottom)); }
 .body-grid button:nth-child(7) { border-bottom-left-radius: 40px; }
 .body-grid button:nth-child(9) { border-bottom-right-radius: 40px; }
 .body-grid button.on { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); font-weight: 600; }
+
+/* Duration: hours and minutes */
+.field { display: flex; flex-direction: column; gap: 4px; font-size: 14px; }
+.duration-input { display: flex; gap: 12px; flex-wrap: wrap; }
+.duration-input .weight-input input { width: 80px; }
+
+/* Selects: drop the native look (Safari draws it shorter than inputs) and match input height */
+select {
+  -webkit-appearance: none; appearance: none; min-height: 42px; padding-right: 32px;
+  background-image: linear-gradient(45deg, transparent 50%, var(--muted) 50%), linear-gradient(135deg, var(--muted) 50%, transparent 50%);
+  background-position: calc(100% - 18px) 50%, calc(100% - 13px) 50%;
+  background-size: 5px 5px; background-repeat: no-repeat;
+}
+input:not([type='checkbox']):not([type='radio']):not(.tiny-input) { min-height: 42px; }

@@ -39,6 +39,19 @@ export function fmtDay(d: DateStr, today: DateStr = dateStr()): string {
 }
 
 /** "5 h before", "1 day 3 h before". */
+/** Hours and minutes from a duration in hours, e.g. 1.5 -> { h: 1, m: 30 }. */
+export function splitHours(hours: number): { h: number; m: number } {
+  const total = Math.round(hours * 60);
+  return { h: Math.floor(total / 60), m: total % 60 };
+}
+
+/** A duration in hours as "45 min", "2 h" or "1 h 30 min". */
+export function fmtDuration(hours: number): string {
+  const { h, m } = splitHours(hours);
+  if (!h) return `${m} min`;
+  return m ? `${h} h ${m} min` : `${h} h`;
+}
+
 export function fmtGap(hours: number): string {
   const h = Math.round(hours);
   if (h < 1) return 'under 1 h before';
