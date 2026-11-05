@@ -1,28 +1,11 @@
 import Dexie, { type Table } from 'dexie';
 import { LOCAL_ONLY, installChangeTracking, markAllForPush, type OutboxEntry, type SyncState } from '../sync/engine';
+import { DEFAULT_SYMPTOM_LISTS } from '../domain/symptoms';
 import type { BowelEntry, DayFactors, Food, Id, Meal, Med, MedDose, Place, Settings, SymptomEntry } from '../domain/types';
-
-export const DEFAULT_SYMPTOMS = [
-  'Bloating',
-  'Stomach pain',
-  'Gas',
-  'Nausea',
-  'Diarrhea',
-  'Constipation',
-  'Reflux or heartburn',
-  'Fatigue',
-  'Brain fog',
-  'Headache',
-  'Joint pain',
-  'Itchy rash',
-  'Mouth ulcers',
-  'Low mood or irritable',
-  'Anxiety',
-];
 
 export const DEFAULT_SETTINGS: Settings = {
   id: 'settings',
-  symptomTypes: DEFAULT_SYMPTOMS,
+  symptomLists: DEFAULT_SYMPTOM_LISTS,
   windowHours: 24,
   reactionSeverity: 4,
   trackPeriod: true,

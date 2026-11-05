@@ -1,6 +1,8 @@
 // Core data model. Times are local wall-clock strings "YYYY-MM-DDTHH:mm" so an
 // entry stays at the hour it was eaten or felt, whatever time zone you're in later.
 
+import type { BodyArea, Frequency, SymptomLists } from './symptoms';
+
 export type Id = string;
 /** Local date "YYYY-MM-DD". */
 export type DateStr = string;
@@ -27,8 +29,10 @@ export const GLUTEN_LABELS: Record<GlutenStatus, string> = {
 
 export interface Settings {
   id: 'settings';
-  /** Symptoms offered in the symptom log, in order. */
-  symptomTypes: string[];
+  /** Symptoms offered in the symptom log, per body area, in order. */
+  symptomLists?: SymptomLists;
+  /** Old flat symptom list, read once to build `symptomLists`. */
+  symptomTypes?: string[];
   /** Hours before a symptom to look at food (Patterns and symptom details). */
   windowHours: number;
   /** A symptom at or above this severity (1 to 10) counts as a reaction in Patterns. */
@@ -97,15 +101,24 @@ export interface Meal {
 
 export interface SymptomScore {
   type: string;
-  /** 1 (barely) to 10 (worst). */
+  /** 1 (barely) to 10 (worst). 0 only while a new entry is being filled in. */
   severity: number;
+  /** The section it was logged under. Older entries leave it out. */
+  area?: BodyArea;
+  /** Where it was felt, e.g. "Upper right (liver)" or "Elbows". */
+  locations?: string[];
+  /** What pain felt like, e.g. "Stabbing". */
+  qualities?: string[];
+  frequency?: Frequency;
+  /** How long this symptom lasted, in hours, if known. */
+  durationHours?: number;
 }
 
 export interface SymptomEntry {
   id: Id;
   at: LocalTime;
   symptoms: SymptomScore[];
-  /** How long it lasted, in hours, if known. */
+  /** How long the whole entry lasted. Older entries only; new ones time each symptom. */
   durationHours?: number;
   notes: string;
 }

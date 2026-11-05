@@ -22,8 +22,13 @@ It is a personal diary, not medical advice.
   gluten-free; "may contain" and oats without a gluten-free label count as caution.
   The verdict opens for checking before it's saved, because the data is crowd-sourced.
 - **My foods**: your safe, caution and avoid lists, with favourites and notes.
-- **Symptoms**: tap symptoms and rate each 1 to 10, with duration and notes. Each entry
-  lists what was eaten in the hours before. The symptom list is editable in Settings.
+- **Symptoms**: grouped into collapsible body areas (abdominal; brain and head, covering
+  physical, thinking and mood; skin; whole body). Tap a symptom and rate it 1 to 10, then
+  optionally say where (a 9-region abdomen map, head areas, body parts, left or right),
+  what the pain feels like (achy, dull, sharp, stabbing, throbbing, pulling...), how often
+  (constant, comes and goes, in waves, once) and how long. Each entry lists what was
+  eaten in the hours before. Each area's list is editable in Settings, and anything typed
+  under "Something else" is added to it.
 - **Bowel movements**: Bristol scale 1 to 7, urgency, and a blood flag with a prompt to
   tell a doctor.
 - **Meds and supplements**: daily items as a checklist, as-needed items with a

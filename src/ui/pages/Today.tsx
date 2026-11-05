@@ -153,7 +153,7 @@ export function Today() {
 
       <CheckIn date={date} trackPeriod={settings.trackPeriod} />
       <MedsCard date={date} />
-      {dayOf(localTime()) === date && <p className="hint center">Log meals even on good days. Patterns needs them to compare.</p>}
+      {dayOf(localTime()) === date && <p className="hint center">Log all meals to ensure accurate tracking of patterns.</p>}
     </div>
   );
 }
