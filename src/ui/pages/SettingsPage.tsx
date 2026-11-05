@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { db, DEFAULT_SYMPTOMS, exportAll, importAll } from '../../db/db';
+import { db, exportAll, importAll } from '../../db/db';
+import { AREA_LABELS, BODY_AREAS, DEFAULT_SYMPTOM_LISTS, type BodyArea, type SymptomLists } from '../../domain/symptoms';
 import type { Settings } from '../../domain/types';
 import { AccountCard } from '../components/AccountCard';
 import { Header, Scale } from '../components/common';
@@ -10,7 +11,6 @@ export function SettingsPage() {
   const nav = useNavigate();
   const s = useSettings();
   const save = (p: Partial<Settings>) => void db.settings.put({ ...s, ...p });
-  const [newType, setNewType] = useState('');
   const [msg, setMsg] = useState('');
   const file = useRef<HTMLInputElement>(null);
 
@@ -43,7 +43,7 @@ export function SettingsPage() {
           <span className="hint">Gluten reactions often show up within hours but can take up to two or three days.</span>
         </label>
         <span className="label">Count a symptom as a reaction from severity</span>
-        <Scale n={10} value={s.reactionSeverity} label="Reaction severity" onChange={(v) => v && save({ reactionSeverity: v })} />
+        <Scale n={10} value={s.reactionSeverity} label="Reaction severity" clearable={false} onChange={(v) => v && save({ reactionSeverity: v })} />
       </section>
 
       <section className="card form">
@@ -57,35 +57,12 @@ export function SettingsPage() {
       </section>
 
       <section className="card form">
-        <h2>Symptom list</h2>
-        <div className="list">
-          {s.symptomTypes.map((t, i) => (
-            <div className="row" key={t}>
-              <span className="grow">{t}</span>
-              <button type="button" className="tiny" aria-label={`Move ${t} up`} disabled={i === 0} onClick={() => save({ symptomTypes: s.symptomTypes.map((x, j) => (j === i - 1 ? t : j === i ? s.symptomTypes[i - 1] : x)) })}>
-                ↑
-              </button>
-              <button type="button" className="tiny" aria-label={`Remove ${t}`} onClick={() => save({ symptomTypes: s.symptomTypes.filter((x) => x !== t) })}>
-                ✕
-              </button>
-            </div>
-          ))}
-        </div>
-        <form
-          className="search-row"
-          onSubmit={(e) => {
-            e.preventDefault();
-            const t = newType.trim();
-            if (t && !s.symptomTypes.includes(t)) save({ symptomTypes: [...s.symptomTypes, t] });
-            setNewType('');
-          }}
-        >
-          <input placeholder="Add a symptom" value={newType} onChange={(e) => setNewType(e.target.value)} aria-label="New symptom" />
-          <button type="submit" className="small" disabled={!newType.trim()}>
-            Add
-          </button>
-        </form>
-        <button type="button" className="ghost small" onClick={() => confirm('Reset the symptom list to the defaults? Past entries are kept.') && save({ symptomTypes: DEFAULT_SYMPTOMS })}>
+        <h2>Symptom lists</h2>
+        <p className="hint">The symptoms offered in each body area when you log symptoms.</p>
+        {BODY_AREAS.map((area) => (
+          <SymptomListEditor key={area} area={area} lists={s.symptomLists} save={(symptomLists) => save({ symptomLists })} />
+        ))}
+        <button type="button" className="ghost small" onClick={() => confirm('Reset the symptom lists to the defaults? Past entries are kept.') && save({ symptomLists: DEFAULT_SYMPTOM_LISTS })}>
           Reset to defaults
         </button>
       </section>
@@ -139,6 +116,46 @@ export function SettingsPage() {
       <p className="hint center">
         This app is a personal diary, not medical advice. Gluten checks use Open Food Facts, which volunteers keep up to date, so always read the package label.
       </p>
+    </div>
+  );
+}
+
+function SymptomListEditor(props: { area: BodyArea; lists: SymptomLists; save: (l: SymptomLists) => void }) {
+  const { area, lists } = props;
+  const list = lists[area];
+  const [newType, setNewType] = useState('');
+  const put = (l: string[]) => props.save({ ...lists, [area]: l });
+  return (
+    <div className="form">
+      <span className="label">{AREA_LABELS[area]}</span>
+      <div className="list">
+        {list.map((t, i) => (
+          <div className="row" key={t}>
+            <span className="grow">{t}</span>
+            <button type="button" className="tiny" aria-label={`Move ${t} up`} disabled={i === 0} onClick={() => put(list.map((x, j) => (j === i - 1 ? t : j === i ? list[i - 1] : x)))}>
+              ↑
+            </button>
+            <button type="button" className="tiny" aria-label={`Remove ${t}`} onClick={() => put(list.filter((x) => x !== t))}>
+              ✕
+            </button>
+          </div>
+        ))}
+        {!list.length && <div className="row muted">None</div>}
+      </div>
+      <form
+        className="search-row"
+        onSubmit={(e) => {
+          e.preventDefault();
+          const t = newType.trim();
+          if (t && !BODY_AREAS.some((a) => lists[a].includes(t))) put([...list, t]);
+          setNewType('');
+        }}
+      >
+        <input placeholder={`Add to ${AREA_LABELS[area].toLowerCase()}`} value={newType} onChange={(e) => setNewType(e.target.value)} aria-label={`New ${AREA_LABELS[area].toLowerCase()} symptom`} />
+        <button type="submit" className="small" disabled={!newType.trim()}>
+          Add
+        </button>
+      </form>
     </div>
   );
 }

@@ -61,13 +61,14 @@ export function NumberInput(props: { value: number | undefined; onChange: (n: nu
   );
 }
 
-/** A row of numbered buttons (1 to n); tapping the chosen one clears it. */
-export function Scale(props: { n: number; value?: number; onChange: (v: number | undefined) => void; low?: string; high?: string; label: string; tone?: 'severity' | 'plain' }) {
+/** A row of numbered buttons (1 to n); tapping the chosen one clears it unless `clearable` is false. */
+export function Scale(props: { n: number; value?: number; onChange: (v: number | undefined) => void; low?: string; high?: string; label: string; tone?: 'severity' | 'plain'; clearable?: boolean }) {
+  const clearable = props.clearable ?? true;
   return (
     <div className="scale-wrap">
       <div className={'scale' + (props.tone === 'severity' ? ' severity' : '')} role="group" aria-label={props.label} style={{ gridTemplateColumns: `repeat(${props.n}, minmax(0, 1fr))` }}>
         {Array.from({ length: props.n }, (_, i) => i + 1).map((v) => (
-          <button type="button" key={v} className={props.value === v ? 'on' : ''} data-v={v} aria-pressed={props.value === v} onClick={() => props.onChange(props.value === v ? undefined : v)}>
+          <button type="button" key={v} className={props.value === v ? 'on' : ''} data-v={v} aria-pressed={props.value === v} onClick={() => props.onChange(props.value === v ? (clearable ? undefined : v) : v)}>
             {v}
           </button>
         ))}

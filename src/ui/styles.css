@@ -257,3 +257,19 @@ main.no-tabs { padding-bottom: calc(24px + env(safe-area-inset-bottom)); }
 .home-label { font-size: 20px; font-weight: 700; }
 .home-sub { font-size: 14px; color: var(--muted); }
 .tabbar a { padding: 4px 4px; }
+
+/* Symptom log: body-area accordions */
+.accordion { padding: 0; gap: 0; }
+.accordion-head { display: flex; align-items: center; gap: 10px; width: 100%; text-align: left; border: 0; background: transparent; padding: 14px; border-radius: var(--radius); color: var(--text); }
+.accordion-head .chev { font-size: 16px; }
+.accordion.open .accordion-head { border-bottom: 1px solid var(--line); border-radius: var(--radius) var(--radius) 0 0; }
+.accordion > .form { padding: 14px; }
+.chip-group { display: flex; flex-direction: column; gap: 6px; }
+.severity-row .seg.wide button { white-space: normal; line-height: 1.2; }
+.body-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; max-width: 360px; }
+.body-grid button { padding: 10px 4px; font-size: 13px; line-height: 1.2; min-height: 52px; border-radius: 8px; }
+.body-grid button:nth-child(1) { border-top-left-radius: 40px; }
+.body-grid button:nth-child(3) { border-top-right-radius: 40px; }
+.body-grid button:nth-child(7) { border-bottom-left-radius: 40px; }
+.body-grid button:nth-child(9) { border-bottom-right-radius: 40px; }
+.body-grid button.on { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); font-weight: 600; }
