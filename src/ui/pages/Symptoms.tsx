@@ -100,7 +100,7 @@ export function SymptomsPage() {
       ))}
       {!entries.length && (
         <p className="empty">
-          {older ? `Nothing logged in the last ${days} days.` : 'Nothing logged yet.'} Keep logging meals on good days too: Patterns compares them with the days that had symptoms.
+          {older ? `Nothing logged in the last ${days} days.` : 'Nothing logged yet.'} Log all meals to ensure accurate tracking of patterns.
         </p>
       )}
       {older > 0 && (
