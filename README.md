@@ -69,7 +69,8 @@ npm run build      # type-check and production build into dist/
 Use a **new Supabase project** for this app, separate from the fitness tracker, so this
 person's health data lives in its own account.
 
-1. Create a free project at supabase.com.
+1. Create a free project at supabase.com, in region **Canada (Central)** (`ca-central-1`)
+   so the data is stored in Canada. A project's region can't be changed later.
 2. **SQL Editor > New query**: paste `supabase/schema.sql` and run it.
 3. **Authentication > Sign In / Providers > Email**: turn off **Confirm email**.
 4. **Project Settings > API**: copy the project URL and the anon / publishable key.
